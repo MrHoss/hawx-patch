@@ -42,7 +42,8 @@ n=0; miss=0
 while :; do
   now=$(date +%s.%N)
   el=$(awk "BEGIN{printf \"%.3f\", $now-$t0}")
-  [ "$el" -ge "$SECS" ] && break
+  # el e fracionario; -ge exigiria inteiro
+  awk "BEGIN{exit !($el >= $SECS)}" && break
   if [ -z "$WIN" ] || [ $((n % 10)) -eq 0 ]; then
     W2=$(find_window); [ -n "$W2" ] && WIN="$W2"
   fi
