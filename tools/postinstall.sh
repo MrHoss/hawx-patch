@@ -51,7 +51,8 @@ echo "--- 2) forcando 1920x1080 tela cheia"
 PREFIX=$(dirname "$(dirname "$(dirname "$(dirname "$GAME")")")")
 [ -d "$PREFIX/drive_c" ] || PREFIX=$(dirname "$GAME")
 n=0
-for s in "$PREFIX"/drive_c/users/*/Documents/*/Profiles/_settings_*.ini; do
+for s in "$PREFIX"/drive_c/users/*/Documents/*/Profiles/_settings_*.ini \
+         "$PREFIX"/drive_c/users/*/"Saved Games"/*/Profiles/_settings_*.ini; do
   [ -f "$s" ] || continue
   sed -i 's/^windowed = .*/windowed = false\r/;s/^width = .*/width = 1920\r/;s/^height = .*/height = 1080\r/' "$s" 2>/dev/null
   echo "    $(basename "$s"): windowed=false 1920x1080"
