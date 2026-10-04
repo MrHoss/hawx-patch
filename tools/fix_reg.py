@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Remove a segunda reserva `: register(cN)` (E5017 'Multiple register()
-reservations' no vkd3d). Mantem a primeira, que e a que o fxc usa."""
+"""Removes the second `: register(cN)` reservation (E5017 'Multiple register()
+reservations' in vkd3d). Keeps the first one, which is the one fxc uses."""
 import glob, os, re, sys
 
-# uso: fix_X.py [--apply] <dir_Shaders_PC>
-#   Sem --apply e so dry-run: mostra o que mudaria sem escrever nada.
+# usage: fix_X.py [--apply] <dir_Shaders_PC>
+#   Without --apply it is a dry run: shows what would change, writes nothing.
 _args = [a for a in sys.argv[1:] if not a.startswith("--")]
 if not _args:
-    sys.exit(f"uso: {os.path.basename(sys.argv[0])} [--apply] <dir_Shaders_PC>")
+    sys.exit(f"usage: {os.path.basename(sys.argv[0])} [--apply] <dir_Shaders_PC>")
 ROOT = _args[0]
 
 # name : register(bN) : register(cM);   ->  name : register(bN);
@@ -16,8 +16,8 @@ PAT = re.compile(
     re.M)
 
 if not os.path.isdir(ROOT) or not os.listdir(ROOT):
-    sys.exit(f"Shaders_PC nao encontrado em: {ROOT}\n"
-             "informe o caminho: fix_X.py [--apply] <dir_Shaders_PC>")
+    sys.exit(f"Shaders_PC not found in: {ROOT}\n"
+             "pass the path: fix_X.py [--apply] <dir_Shaders_PC>")
 
 dry = '--apply' not in sys.argv
 files = subs = 0
@@ -31,5 +31,5 @@ for p in sorted(glob.glob(os.path.join(ROOT, '**', '*.fx'), recursive=True)):
     print(f'  {os.path.relpath(p, ROOT)}: {n}')
     if not dry:
         open(p, 'wb').write(nb)
-print(f'\n{subs} reserva(s) dupla(s) removida(s) em {files} arquivo(s)'
-      f'{" [DRY-RUN]" if dry else " [APLICADO]"}')
+print(f'\n{subs} duplicate reservation(s) removed in {files} file(s)'
+      f'{" [DRY-RUN]" if dry else " [APPLIED]"}')

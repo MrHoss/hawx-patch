@@ -33,17 +33,17 @@ prefix, as your launcher exposes it.
 ## Install
 
 ```sh
-./install.sh /caminho/para/o/jogo
+./install.sh /path/to/the/game
 ```
 
 That is the whole procedure. It creates `Data/Shaders_PC.hawxbackup` next to the
-shaders (so you can always get the originals back) and prints `RESULTADO:
-completo` only if every fix actually applied.
+shaders (so you can always get the originals back) and prints `RESULT: complete`
+only if every fix actually applied.
 
 Equivalent by hand, if you prefer plain `patch`:
 
 ```sh
-cd "/caminho/para/o/jogo"
+cd "/path/to/the/game"
 patch -p1 < patches/hawx-wined3d-shader-fix.patch
 patch -p1 < patches/hawx-wined3d-depthms-workaround.patch
 ```
@@ -54,7 +54,7 @@ game folder** and run it with no arguments — it locates itself.
 Undo:
 
 ```sh
-./install.sh --revert /caminho/para/o/jogo     # back to the game as shipped
+./install.sh --revert /path/to/the/game     # back to the game as shipped
 rm -rf Data/Shaders_PC && cp -a Data/Shaders_PC.hawxbackup Data/Shaders_PC
 ```
 
@@ -224,8 +224,8 @@ Measured against vkd3d-shader **1.18** (GE-Proton10-27, Proton 10.0) and
 take the shader directory explicitly and are dry-run unless `--apply` is given:
 
 ```sh
-python3 tools/fix_wvm.py /caminho/para/Data/Shaders_PC        # dry-run
-python3 tools/fix_wvm.py --apply /caminho/para/Data/Shaders_PC # write
+python3 tools/fix_wvm.py /path/to/Data/Shaders_PC        # dry-run
+python3 tools/fix_wvm.py --apply /path/to/Data/Shaders_PC # write
 ```
 
 | file | role |

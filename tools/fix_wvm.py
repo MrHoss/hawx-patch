@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Substitui `(float3x3)X = mul(...)` (size change on the LHS, E5017 no vkd3d)
-por temporario float3x3 + atribuicao coluna a coluna. Preserva CRLF."""
+"""Replaces `(float3x3)X = mul(...)` (size change on the LHS, E5017 in vkd3d)
+with a temporary float3x3 + per-column assignment. Preserves CRLF."""
 import glob, os, re, sys
 
-# uso: fix_X.py [--apply] <dir_Shaders_PC>
-#   Sem --apply e so dry-run: mostra o que mudaria sem escrever nada.
+# usage: fix_X.py [--apply] <dir_Shaders_PC>
+#   Without --apply it is a dry run: shows what would change, writes nothing.
 _args = [a for a in sys.argv[1:] if not a.startswith("--")]
 if not _args:
-    sys.exit(f"uso: {os.path.basename(sys.argv[0])} [--apply] <dir_Shaders_PC>")
+    sys.exit(f"usage: {os.path.basename(sys.argv[0])} [--apply] <dir_Shaders_PC>")
 ROOT = _args[0]
 
 PAT = re.compile(
@@ -24,8 +24,8 @@ def repl(m):
 
 
 if not os.path.isdir(ROOT) or not os.listdir(ROOT):
-    sys.exit(f"Shaders_PC nao encontrado em: {ROOT}\n"
-             "informe o caminho: fix_X.py [--apply] <dir_Shaders_PC>")
+    sys.exit(f"Shaders_PC not found in: {ROOT}\n"
+             "pass the path: fix_X.py [--apply] <dir_Shaders_PC>")
 
 dry = '--apply' not in sys.argv
 total_files = total_subs = 0
@@ -39,5 +39,5 @@ for p in sorted(glob.glob(os.path.join(ROOT, '**', '*.fx'), recursive=True)):
     print(f'  {os.path.relpath(p, ROOT)}: {n}')
     if not dry:
         open(p, 'wb').write(nb)
-print(f'\n{total_subs} substituicao(oes) em {total_files} arquivo(s)'
-      f'{" [DRY-RUN]" if dry else " [APLICADO]"}')
+print(f'\n{total_subs} substitution(s) in {total_files} file(s)'
+      f'{" [DRY-RUN]" if dry else " [APPLIED]"}')
