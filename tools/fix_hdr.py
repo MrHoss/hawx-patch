@@ -9,15 +9,12 @@ Idempotente: aceita tanto a forma original (double binding) quanto a ja-corrigid
 """
 import os, re, sys
 
-# Sem argumento, usa $HAWX_GAME_DIR ou a raiz do prefixo deste usuario.
-_env = os.environ.get("HAWX_GAME_DIR", "").rstrip("/")
-_default = _env + "/Data/Shaders_PC" if _env else (
-    os.path.expanduser("~/Games/Heroic/Prefixes/default/Tom Clancys H.A.W.X./"
-                        "drive_c/Program Files (x86)/DODI-Repacks/Tom Clancys H A W X/"
-                        "Data/Shaders_PC"))
-# uso: fix_X.py [--apply] [dir_Shaders_PC]
+# uso: fix_X.py [--apply] <dir_Shaders_PC>
+#   Sem --apply e so dry-run: mostra o que mudaria sem escrever nada.
 _args = [a for a in sys.argv[1:] if not a.startswith("--")]
-ROOT = _args[0] if _args else ROOT_DEFAULT
+if not _args:
+    sys.exit(f"uso: {os.path.basename(sys.argv[0])} [--apply] <dir_Shaders_PC>")
+ROOT = _args[0]
 
 FILES = ['Hud/Tooltip_PS.fx', 'Hud/HudForeOnlyColor_PS.fx', 'Hud/HudFrame_PS.fx',
          'Hud/Menu_PS.fx', 'Hud/HudBackOnlyColor_PS.fx', 'Hud/OnlyColor_PS.fx']
