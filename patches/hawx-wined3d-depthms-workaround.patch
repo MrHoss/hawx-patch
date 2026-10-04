@@ -1,0 +1,112 @@
+diff -ruN ga/Data/Shaders_PC/DepthMS02ToLinDepth_PS.fx gb/Data/Shaders_PC/DepthMS02ToLinDepth_PS.fx
+--- ga/Data/Shaders_PC/DepthMS02ToLinDepth_PS.fx
++++ gb/Data/Shaders_PC/DepthMS02ToLinDepth_PS.fx
+@@ -1,22 +1,4 @@
+-Texture2DMS<float, 2>	DepthTexture		: register(t0);
+-
+-SamplerState	DepthTexture_sstate		: register(s0);
+-
+-
+-struct PS_IN
++float4 main(float4 c : COLOR) : COLOR
+ {
+-	float4 ProjPos	: SV_Position;
+-	float4 Color	: COLOR;
+-	float4 Color1	: COLOR1;
+-	float2 Tex0		: TEXCOORD0;
+-};
+-
+-
+-float4 ProjParams		: register(c0);
+-
+-float4 main(PS_IN In) : SV_Target
+-{
+-	float depth =  DepthTexture.Load(int2(In.Tex0 * ProjParams.xy), 0).r;
+-	depth = (depth * ProjParams.w) / (depth - ProjParams.z);
+-	return depth;
++	return float4(0.0f, 0.0f, 0.0f, 1.0f);
+ }
+diff -ruN ga/Data/Shaders_PC/DepthMS04ToLinDepth_PS.fx gb/Data/Shaders_PC/DepthMS04ToLinDepth_PS.fx
+--- ga/Data/Shaders_PC/DepthMS04ToLinDepth_PS.fx
++++ gb/Data/Shaders_PC/DepthMS04ToLinDepth_PS.fx
+@@ -1,22 +1,4 @@
+-Texture2DMS<float, 4>	DepthTexture		: register(t0);
+-
+-SamplerState	DepthTexture_sstate		: register(s0);
+-
+-
+-struct PS_IN
++float4 main(float4 c : COLOR) : COLOR
+ {
+-	float4 ProjPos	: SV_Position;
+-	float4 Color	: COLOR;
+-	float4 Color1	: COLOR1;
+-	float2 Tex0		: TEXCOORD0;
+-};
+-
+-
+-float4 ProjParams		: register(c0);
+-
+-float4 main(PS_IN In) : SV_Target
+-{
+-	float depth =  DepthTexture.Load(int2(In.Tex0 * ProjParams.xy), 0).r;
+-	depth = (depth * ProjParams.w) / (depth - ProjParams.z);
+-	return depth;
++	return float4(0.0f, 0.0f, 0.0f, 1.0f);
+ }
+diff -ruN ga/Data/Shaders_PC/DepthMS08ToLinDepth_PS.fx gb/Data/Shaders_PC/DepthMS08ToLinDepth_PS.fx
+--- ga/Data/Shaders_PC/DepthMS08ToLinDepth_PS.fx
++++ gb/Data/Shaders_PC/DepthMS08ToLinDepth_PS.fx
+@@ -1,22 +1,4 @@
+-Texture2DMS<float, 8>	DepthTexture		: register(t0);
+-
+-SamplerState	DepthTexture_sstate		: register(s0);
+-
+-
+-struct PS_IN
++float4 main(float4 c : COLOR) : COLOR
+ {
+-	float4 ProjPos	: SV_Position;
+-	float4 Color	: COLOR;
+-	float4 Color1	: COLOR1;
+-	float2 Tex0		: TEXCOORD0;
+-};
+-
+-
+-float4 ProjParams		: register(c0);
+-
+-float4 main(PS_IN In) : SV_Target
+-{
+-	float depth =  DepthTexture.Load(int2(In.Tex0 * ProjParams.xy), 0).r;
+-	depth = (depth * ProjParams.w) / (depth - ProjParams.z);
+-	return depth;
++	return float4(0.0f, 0.0f, 0.0f, 1.0f);
+ }
+diff -ruN ga/Data/Shaders_PC/DepthMS16ToLinDepth_PS.fx gb/Data/Shaders_PC/DepthMS16ToLinDepth_PS.fx
+--- ga/Data/Shaders_PC/DepthMS16ToLinDepth_PS.fx
++++ gb/Data/Shaders_PC/DepthMS16ToLinDepth_PS.fx
+@@ -1,22 +1,4 @@
+-Texture2DMS<float, 16>	DepthTexture		: register(t0);
+-
+-SamplerState	DepthTexture_sstate		: register(s0);
+-
+-
+-struct PS_IN
++float4 main(float4 c : COLOR) : COLOR
+ {
+-	float4 ProjPos	: SV_Position;
+-	float4 Color	: COLOR;
+-	float4 Color1	: COLOR1;
+-	float2 Tex0		: TEXCOORD0;
+-};
+-
+-
+-float4 ProjParams		: register(c0);
+-
+-float4 main(PS_IN In) : SV_Target
+-{
+-	float depth =  DepthTexture.Load(int2(In.Tex0 * ProjParams.xy), 0).r;
+-	depth = (depth * ProjParams.w) / (depth - ProjParams.z);
+-	return depth;
++	return float4(0.0f, 0.0f, 0.0f, 1.0f);
+ }

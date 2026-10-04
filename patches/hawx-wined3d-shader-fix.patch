@@ -1,0 +1,684 @@
+diff -ruN a/Data/Shaders_PC/BasicNNVS_SHD.fx b/Data/Shaders_PC/BasicNNVS_SHD.fx
+--- a/Data/Shaders_PC/BasicNNVS_SHD.fx
++++ b/Data/Shaders_PC/BasicNNVS_SHD.fx
+@@ -41,7 +41,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)LightViewMat, (float3x3)matW);
++    float3x3 _hawx_wvm3 = mul((float3x3)LightViewMat, (float3x3)matW);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {matW[0][3] - LightViewMat[0][3], matW[1][3] - LightViewMat[1][3], matW[2][3] - LightViewMat[2][3]};
+     
+diff -ruN a/Data/Shaders_PC/BasicVS_SHD.fx b/Data/Shaders_PC/BasicVS_SHD.fx
+--- a/Data/Shaders_PC/BasicVS_SHD.fx
++++ b/Data/Shaders_PC/BasicVS_SHD.fx
+@@ -41,7 +41,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)LightViewMat, (float3x3)matW);
++    float3x3 _hawx_wvm3 = mul((float3x3)LightViewMat, (float3x3)matW);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {matW[0][3] - LightViewMat[0][3], matW[1][3] - LightViewMat[1][3], matW[2][3] - LightViewMat[2][3]};
+     
+diff -ruN a/Data/Shaders_PC/BuildingEx/BuildingShadowPatch_VS.fx b/Data/Shaders_PC/BuildingEx/BuildingShadowPatch_VS.fx
+--- a/Data/Shaders_PC/BuildingEx/BuildingShadowPatch_VS.fx
++++ b/Data/Shaders_PC/BuildingEx/BuildingShadowPatch_VS.fx
+@@ -15,7 +15,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)ViewMat, (float3x3)WorldMat);
++    float3x3 _hawx_wvm3 = mul((float3x3)ViewMat, (float3x3)WorldMat);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {WorldMat[0][3] - ViewMat[0][3], WorldMat[1][3] - ViewMat[1][3], WorldMat[2][3] - ViewMat[2][3]};
+     
+diff -ruN a/Data/Shaders_PC/BuildingEx/BuildingShadow_VS.fx b/Data/Shaders_PC/BuildingEx/BuildingShadow_VS.fx
+--- a/Data/Shaders_PC/BuildingEx/BuildingShadow_VS.fx
++++ b/Data/Shaders_PC/BuildingEx/BuildingShadow_VS.fx
+@@ -15,7 +15,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)ViewMat, (float3x3)WorldMat);
++    float3x3 _hawx_wvm3 = mul((float3x3)ViewMat, (float3x3)WorldMat);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {WorldMat[0][3] - ViewMat[0][3], WorldMat[1][3] - ViewMat[1][3], WorldMat[2][3] - ViewMat[2][3]};
+     
+diff -ruN a/Data/Shaders_PC/BuildingEx/_EditorBuildingShadow_VS.fx b/Data/Shaders_PC/BuildingEx/_EditorBuildingShadow_VS.fx
+--- a/Data/Shaders_PC/BuildingEx/_EditorBuildingShadow_VS.fx
++++ b/Data/Shaders_PC/BuildingEx/_EditorBuildingShadow_VS.fx
+@@ -15,7 +15,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)ViewMat, (float3x3)WorldMat);
++    float3x3 _hawx_wvm3 = mul((float3x3)ViewMat, (float3x3)WorldMat);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {WorldMat[0][3] - ViewMat[0][3], WorldMat[1][3] - ViewMat[1][3], WorldMat[2][3] - ViewMat[2][3]};
+     
+diff -ruN a/Data/Shaders_PC/BuildingEx/_EditorTerrainLight_VS.fx b/Data/Shaders_PC/BuildingEx/_EditorTerrainLight_VS.fx
+--- a/Data/Shaders_PC/BuildingEx/_EditorTerrainLight_VS.fx
++++ b/Data/Shaders_PC/BuildingEx/_EditorTerrainLight_VS.fx
+@@ -17,7 +17,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)ViewMat, (float3x3)WorldMat);
++    float3x3 _hawx_wvm3 = mul((float3x3)ViewMat, (float3x3)WorldMat);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {WorldMat[0][3] - ViewMat[0][3], WorldMat[1][3] - ViewMat[1][3], WorldMat[2][3] - ViewMat[2][3]};
+     
+diff -ruN a/Data/Shaders_PC/BuildingEx/_EditorTerrainShadowPatch_VS.fx b/Data/Shaders_PC/BuildingEx/_EditorTerrainShadowPatch_VS.fx
+--- a/Data/Shaders_PC/BuildingEx/_EditorTerrainShadowPatch_VS.fx
++++ b/Data/Shaders_PC/BuildingEx/_EditorTerrainShadowPatch_VS.fx
+@@ -20,7 +20,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)LightViewMat, (float3x3)WorldMat);
++    float3x3 _hawx_wvm3 = mul((float3x3)LightViewMat, (float3x3)WorldMat);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {WorldMat[0][3] - LightViewMat[0][3], WorldMat[1][3] - LightViewMat[1][3], WorldMat[2][3] - LightViewMat[2][3]};
+     
+@@ -35,7 +38,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)CamViewMat, (float3x3)WorldMat);
++    float3x3 _hawx_wvm3 = mul((float3x3)CamViewMat, (float3x3)WorldMat);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {WorldMat[0][3] - CamViewMat[0][3], WorldMat[1][3] - CamViewMat[1][3], WorldMat[2][3] - CamViewMat[2][3]};
+     
+diff -ruN a/Data/Shaders_PC/BuildingsVS.fx b/Data/Shaders_PC/BuildingsVS.fx
+--- a/Data/Shaders_PC/BuildingsVS.fx
++++ b/Data/Shaders_PC/BuildingsVS.fx
+@@ -20,7 +20,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)ViewMat, (float3x3)WorldMat);
++    float3x3 _hawx_wvm3 = mul((float3x3)ViewMat, (float3x3)WorldMat);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {WorldMat[0][3] - ViewMat[0][3], WorldMat[1][3] - ViewMat[1][3], WorldMat[2][3] - ViewMat[2][3]};
+     
+diff -ruN a/Data/Shaders_PC/Bullet_VS.fx b/Data/Shaders_PC/Bullet_VS.fx
+--- a/Data/Shaders_PC/Bullet_VS.fx
++++ b/Data/Shaders_PC/Bullet_VS.fx
+@@ -82,7 +82,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)ViewMat, (float3x3)WorldMat);
++    float3x3 _hawx_wvm3 = mul((float3x3)ViewMat, (float3x3)WorldMat);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {WorldMat[0][3] - ViewMat[0][3], WorldMat[1][3] - ViewMat[1][3], WorldMat[2][3] - ViewMat[2][3]};
+     
+diff -ruN a/Data/Shaders_PC/Forest/ForestGLCVS_20.fx b/Data/Shaders_PC/Forest/ForestGLCVS_20.fx
+--- a/Data/Shaders_PC/Forest/ForestGLCVS_20.fx
++++ b/Data/Shaders_PC/Forest/ForestGLCVS_20.fx
+@@ -68,7 +68,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)ViewMat, (float3x3)Instance[inst].WorldMat);
++    float3x3 _hawx_wvm3 = mul((float3x3)ViewMat, (float3x3)Instance[inst].WorldMat);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {Instance[inst].WorldMat[0][3] - ViewMat[0][3], Instance[inst].WorldMat[1][3] - ViewMat[1][3], Instance[inst].WorldMat[2][3] - ViewMat[2][3]};
+     
+diff -ruN a/Data/Shaders_PC/Forest/ForestGLCVS.fx b/Data/Shaders_PC/Forest/ForestGLCVS.fx
+--- a/Data/Shaders_PC/Forest/ForestGLCVS.fx
++++ b/Data/Shaders_PC/Forest/ForestGLCVS.fx
+@@ -68,7 +68,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)ViewMat, (float3x3)Instance[inst].WorldMat);
++    float3x3 _hawx_wvm3 = mul((float3x3)ViewMat, (float3x3)Instance[inst].WorldMat);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {Instance[inst].WorldMat[0][3] - ViewMat[0][3], Instance[inst].WorldMat[1][3] - ViewMat[1][3], Instance[inst].WorldMat[2][3] - ViewMat[2][3]};
+     
+diff -ruN a/Data/Shaders_PC/Forest/ForestGLICVS.fx b/Data/Shaders_PC/Forest/ForestGLICVS.fx
+--- a/Data/Shaders_PC/Forest/ForestGLICVS.fx
++++ b/Data/Shaders_PC/Forest/ForestGLICVS.fx
+@@ -68,7 +68,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)ViewMat, (float3x3)Instance[inst].WorldMat);
++    float3x3 _hawx_wvm3 = mul((float3x3)ViewMat, (float3x3)Instance[inst].WorldMat);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {Instance[inst].WorldMat[0][3] - ViewMat[0][3], Instance[inst].WorldMat[1][3] - ViewMat[1][3], Instance[inst].WorldMat[2][3] - ViewMat[2][3]};
+     
+diff -ruN a/Data/Shaders_PC/Forest/ForestGLIVS.fx b/Data/Shaders_PC/Forest/ForestGLIVS.fx
+--- a/Data/Shaders_PC/Forest/ForestGLIVS.fx
++++ b/Data/Shaders_PC/Forest/ForestGLIVS.fx
+@@ -68,7 +68,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)ViewMat, (float3x3)Instance[inst].WorldMat);
++    float3x3 _hawx_wvm3 = mul((float3x3)ViewMat, (float3x3)Instance[inst].WorldMat);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {Instance[inst].WorldMat[0][3] - ViewMat[0][3], Instance[inst].WorldMat[1][3] - ViewMat[1][3], Instance[inst].WorldMat[2][3] - ViewMat[2][3]};
+     
+diff -ruN a/Data/Shaders_PC/Forest/ForestGLTEXCVS.fx b/Data/Shaders_PC/Forest/ForestGLTEXCVS.fx
+--- a/Data/Shaders_PC/Forest/ForestGLTEXCVS.fx
++++ b/Data/Shaders_PC/Forest/ForestGLTEXCVS.fx
+@@ -68,7 +68,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)ViewMat, (float3x3)Instance[inst].WorldMat);
++    float3x3 _hawx_wvm3 = mul((float3x3)ViewMat, (float3x3)Instance[inst].WorldMat);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {Instance[inst].WorldMat[0][3] - ViewMat[0][3], Instance[inst].WorldMat[1][3] - ViewMat[1][3], Instance[inst].WorldMat[2][3] - ViewMat[2][3]};
+     
+diff -ruN a/Data/Shaders_PC/Forest/ForestGLTEXVS.fx b/Data/Shaders_PC/Forest/ForestGLTEXVS.fx
+--- a/Data/Shaders_PC/Forest/ForestGLTEXVS.fx
++++ b/Data/Shaders_PC/Forest/ForestGLTEXVS.fx
+@@ -68,7 +68,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)ViewMat, (float3x3)Instance[inst].WorldMat);
++    float3x3 _hawx_wvm3 = mul((float3x3)ViewMat, (float3x3)Instance[inst].WorldMat);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {Instance[inst].WorldMat[0][3] - ViewMat[0][3], Instance[inst].WorldMat[1][3] - ViewMat[1][3], Instance[inst].WorldMat[2][3] - ViewMat[2][3]};
+     
+diff -ruN a/Data/Shaders_PC/Forest/ForestGLVS_20.fx b/Data/Shaders_PC/Forest/ForestGLVS_20.fx
+--- a/Data/Shaders_PC/Forest/ForestGLVS_20.fx
++++ b/Data/Shaders_PC/Forest/ForestGLVS_20.fx
+@@ -68,7 +68,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)ViewMat, (float3x3)Instance[inst].WorldMat);
++    float3x3 _hawx_wvm3 = mul((float3x3)ViewMat, (float3x3)Instance[inst].WorldMat);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {Instance[inst].WorldMat[0][3] - ViewMat[0][3], Instance[inst].WorldMat[1][3] - ViewMat[1][3], Instance[inst].WorldMat[2][3] - ViewMat[2][3]};
+     
+diff -ruN a/Data/Shaders_PC/Forest/ForestGLVS.fx b/Data/Shaders_PC/Forest/ForestGLVS.fx
+--- a/Data/Shaders_PC/Forest/ForestGLVS.fx
++++ b/Data/Shaders_PC/Forest/ForestGLVS.fx
+@@ -68,7 +68,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)ViewMat, (float3x3)Instance[inst].WorldMat);
++    float3x3 _hawx_wvm3 = mul((float3x3)ViewMat, (float3x3)Instance[inst].WorldMat);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {Instance[inst].WorldMat[0][3] - ViewMat[0][3], Instance[inst].WorldMat[1][3] - ViewMat[1][3], Instance[inst].WorldMat[2][3] - ViewMat[2][3]};
+     
+diff -ruN a/Data/Shaders_PC/Forest/ForestHLVS_20.fx b/Data/Shaders_PC/Forest/ForestHLVS_20.fx
+--- a/Data/Shaders_PC/Forest/ForestHLVS_20.fx
++++ b/Data/Shaders_PC/Forest/ForestHLVS_20.fx
+@@ -68,7 +68,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)ViewMat, (float3x3)Instance[inst].WorldMat);
++    float3x3 _hawx_wvm3 = mul((float3x3)ViewMat, (float3x3)Instance[inst].WorldMat);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {Instance[inst].WorldMat[0][3] - ViewMat[0][3], Instance[inst].WorldMat[1][3] - ViewMat[1][3], Instance[inst].WorldMat[2][3] - ViewMat[2][3]};
+     
+diff -ruN a/Data/Shaders_PC/Forest/ForestHLVS.fx b/Data/Shaders_PC/Forest/ForestHLVS.fx
+--- a/Data/Shaders_PC/Forest/ForestHLVS.fx
++++ b/Data/Shaders_PC/Forest/ForestHLVS.fx
+@@ -68,7 +68,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)ViewMat, (float3x3)Instance[inst].WorldMat);
++    float3x3 _hawx_wvm3 = mul((float3x3)ViewMat, (float3x3)Instance[inst].WorldMat);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {Instance[inst].WorldMat[0][3] - ViewMat[0][3], Instance[inst].WorldMat[1][3] - ViewMat[1][3], Instance[inst].WorldMat[2][3] - ViewMat[2][3]};
+     
+diff -ruN a/Data/Shaders_PC/Forest/ForestUtil.fx b/Data/Shaders_PC/Forest/ForestUtil.fx
+--- a/Data/Shaders_PC/Forest/ForestUtil.fx
++++ b/Data/Shaders_PC/Forest/ForestUtil.fx
+@@ -68,7 +68,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)ViewMat, (float3x3)Instance[inst].WorldMat);
++    float3x3 _hawx_wvm3 = mul((float3x3)ViewMat, (float3x3)Instance[inst].WorldMat);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {Instance[inst].WorldMat[0][3] - ViewMat[0][3], Instance[inst].WorldMat[1][3] - ViewMat[1][3], Instance[inst].WorldMat[2][3] - ViewMat[2][3]};
+     
+diff -ruN a/Data/Shaders_PC/Forest/ForestVLVS_20.fx b/Data/Shaders_PC/Forest/ForestVLVS_20.fx
+--- a/Data/Shaders_PC/Forest/ForestVLVS_20.fx
++++ b/Data/Shaders_PC/Forest/ForestVLVS_20.fx
+@@ -68,7 +68,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)ViewMat, (float3x3)Instance[inst].WorldMat);
++    float3x3 _hawx_wvm3 = mul((float3x3)ViewMat, (float3x3)Instance[inst].WorldMat);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {Instance[inst].WorldMat[0][3] - ViewMat[0][3], Instance[inst].WorldMat[1][3] - ViewMat[1][3], Instance[inst].WorldMat[2][3] - ViewMat[2][3]};
+     
+diff -ruN a/Data/Shaders_PC/Forest/ForestVLVS.fx b/Data/Shaders_PC/Forest/ForestVLVS.fx
+--- a/Data/Shaders_PC/Forest/ForestVLVS.fx
++++ b/Data/Shaders_PC/Forest/ForestVLVS.fx
+@@ -68,7 +68,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)ViewMat, (float3x3)Instance[inst].WorldMat);
++    float3x3 _hawx_wvm3 = mul((float3x3)ViewMat, (float3x3)Instance[inst].WorldMat);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {Instance[inst].WorldMat[0][3] - ViewMat[0][3], Instance[inst].WorldMat[1][3] - ViewMat[1][3], Instance[inst].WorldMat[2][3] - ViewMat[2][3]};
+     
+diff -ruN a/Data/Shaders_PC/Hud/HangarShadow_VS.fx b/Data/Shaders_PC/Hud/HangarShadow_VS.fx
+--- a/Data/Shaders_PC/Hud/HangarShadow_VS.fx
++++ b/Data/Shaders_PC/Hud/HangarShadow_VS.fx
+@@ -19,7 +19,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)ViewMat, (float3x3)WorldMat);
++    float3x3 _hawx_wvm3 = mul((float3x3)ViewMat, (float3x3)WorldMat);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {WorldMat[0][3] - ViewMat[0][3], WorldMat[1][3] - ViewMat[1][3], WorldMat[2][3] - ViewMat[2][3]};
+     
+diff -ruN a/Data/Shaders_PC/Hud/Hangar_VS.fx b/Data/Shaders_PC/Hud/Hangar_VS.fx
+--- a/Data/Shaders_PC/Hud/Hangar_VS.fx
++++ b/Data/Shaders_PC/Hud/Hangar_VS.fx
+@@ -27,7 +27,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)ViewMat, (float3x3)WorldMat);
++    float3x3 _hawx_wvm3 = mul((float3x3)ViewMat, (float3x3)WorldMat);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {WorldMat[0][3] - ViewMat[0][3], WorldMat[1][3] - ViewMat[1][3], WorldMat[2][3] - ViewMat[2][3]};
+     
+diff -ruN a/Data/Shaders_PC/Hud/HudBackOnlyColor_PS.fx b/Data/Shaders_PC/Hud/HudBackOnlyColor_PS.fx
+--- a/Data/Shaders_PC/Hud/HudBackOnlyColor_PS.fx
++++ b/Data/Shaders_PC/Hud/HudBackOnlyColor_PS.fx
+@@ -1,6 +1,6 @@
+ #include "Utils\HDR_Util.fx"
+ 
+-bool bHDR : register(b0) : register(c31);
++float bHDR : register(c31);
+ float4 hudColor : register(c0);
+ 
+ 
+diff -ruN a/Data/Shaders_PC/Hud/HudForeOnlyColor_PS.fx b/Data/Shaders_PC/Hud/HudForeOnlyColor_PS.fx
+--- a/Data/Shaders_PC/Hud/HudForeOnlyColor_PS.fx
++++ b/Data/Shaders_PC/Hud/HudForeOnlyColor_PS.fx
+@@ -1,6 +1,6 @@
+ #include "Utils\HDR_Util.fx"
+ 
+-bool bHDR : register(b0) : register(c31);
++float bHDR : register(c31);
+ float4 hudColor : register(c0);
+ 
+ 
+diff -ruN a/Data/Shaders_PC/Hud/HudFrame_PS.fx b/Data/Shaders_PC/Hud/HudFrame_PS.fx
+--- a/Data/Shaders_PC/Hud/HudFrame_PS.fx
++++ b/Data/Shaders_PC/Hud/HudFrame_PS.fx
+@@ -2,7 +2,7 @@
+ 
+ sampler s0				: register(s0);
+ 
+-bool bHDR : register(b0) : register(c31);
++float bHDR : register(c31);
+ 
+ float4 ColorGradient1	: register(c0);
+ float4 ColorGradient2	: register(c1);
+diff -ruN a/Data/Shaders_PC/Hud/Menu_PS.fx b/Data/Shaders_PC/Hud/Menu_PS.fx
+--- a/Data/Shaders_PC/Hud/Menu_PS.fx
++++ b/Data/Shaders_PC/Hud/Menu_PS.fx
+@@ -1,7 +1,7 @@
+ // Author: amo
+ #include "Utils\HDR_Util.fx"
+ 
+-bool bHDR			: register(b0) : register(c31);
++float bHDR			: register(c31);
+ 
+ sampler2D s0		: register(s0);
+ 
+diff -ruN a/Data/Shaders_PC/Hud/OnlyColor_PS.fx b/Data/Shaders_PC/Hud/OnlyColor_PS.fx
+--- a/Data/Shaders_PC/Hud/OnlyColor_PS.fx
++++ b/Data/Shaders_PC/Hud/OnlyColor_PS.fx
+@@ -1,6 +1,6 @@
+ #include "Utils\HDR_Util.fx"
+ 
+-bool bHDR : register(b0) : register(c31);
++float bHDR : register(c31);
+ 
+ struct PS_IN                                 
+ {                                             
+diff -ruN a/Data/Shaders_PC/Hud/Tooltip_PS.fx b/Data/Shaders_PC/Hud/Tooltip_PS.fx
+--- a/Data/Shaders_PC/Hud/Tooltip_PS.fx
++++ b/Data/Shaders_PC/Hud/Tooltip_PS.fx
+@@ -1,7 +1,7 @@
+ // Author: amo
+ #include "Utils\HDR_Util.fx"
+ 
+-bool bHDR			: register(b0) : register(c31);
++float bHDR			: register(c31);
+ 
+ sampler2D s0		: register(s0);
+ 
+diff -ruN a/Data/Shaders_PC/Plane/CockpitGlassVS.fx b/Data/Shaders_PC/Plane/CockpitGlassVS.fx
+--- a/Data/Shaders_PC/Plane/CockpitGlassVS.fx
++++ b/Data/Shaders_PC/Plane/CockpitGlassVS.fx
+@@ -31,7 +31,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)ViewMat, (float3x3)WorldMat);
++    float3x3 _hawx_wvm3 = mul((float3x3)ViewMat, (float3x3)WorldMat);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {WorldMat[0][3] - ViewMat[0][3], WorldMat[1][3] - ViewMat[1][3], WorldMat[2][3] - ViewMat[2][3]};
+     
+diff -ruN a/Data/Shaders_PC/PlaneGlass_VS.fx b/Data/Shaders_PC/PlaneGlass_VS.fx
+--- a/Data/Shaders_PC/PlaneGlass_VS.fx
++++ b/Data/Shaders_PC/PlaneGlass_VS.fx
+@@ -26,7 +26,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)ViewMat, (float3x3)WorldMat);
++    float3x3 _hawx_wvm3 = mul((float3x3)ViewMat, (float3x3)WorldMat);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {WorldMat[0][3] - ViewMat[0][3], WorldMat[1][3] - ViewMat[1][3], WorldMat[2][3] - ViewMat[2][3]};
+     
+diff -ruN a/Data/Shaders_PC/SonicBoom_VS.fx b/Data/Shaders_PC/SonicBoom_VS.fx
+--- a/Data/Shaders_PC/SonicBoom_VS.fx
++++ b/Data/Shaders_PC/SonicBoom_VS.fx
+@@ -15,7 +15,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)ViewMat, (float3x3)WorldMat);
++    float3x3 _hawx_wvm3 = mul((float3x3)ViewMat, (float3x3)WorldMat);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {WorldMat[0][3] - ViewMat[0][3], WorldMat[1][3] - ViewMat[1][3], WorldMat[2][3] - ViewMat[2][3]};
+     
+diff -ruN a/Data/Shaders_PC/SpeedFx_VS.fx b/Data/Shaders_PC/SpeedFx_VS.fx
+--- a/Data/Shaders_PC/SpeedFx_VS.fx
++++ b/Data/Shaders_PC/SpeedFx_VS.fx
+@@ -16,7 +16,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)ViewMat, (float3x3)WorldMat);
++    float3x3 _hawx_wvm3 = mul((float3x3)ViewMat, (float3x3)WorldMat);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {WorldMat[0][3] - ViewMat[0][3], WorldMat[1][3] - ViewMat[1][3], WorldMat[2][3] - ViewMat[2][3]};
+     
+diff -ruN a/Data/Shaders_PC/Terrain/FH_TerrainAlpha_30_VS.fx b/Data/Shaders_PC/Terrain/FH_TerrainAlpha_30_VS.fx
+--- a/Data/Shaders_PC/Terrain/FH_TerrainAlpha_30_VS.fx
++++ b/Data/Shaders_PC/Terrain/FH_TerrainAlpha_30_VS.fx
+@@ -34,7 +34,7 @@
+ 
+ 
+ //------------BOOL VERTEX SHADER INPUT CONSTANTS-----------
+-bool		bYFOG  : register(b0) : register(c19);	
++bool		bYFOG  : register(b0);	
+ //-------------VERTEX SHADER INPUT CONSTANTS----------------
+ 
+ 
+diff -ruN a/Data/Shaders_PC/Terrain/FH_TerrainAlpha_VS.fx b/Data/Shaders_PC/Terrain/FH_TerrainAlpha_VS.fx
+--- a/Data/Shaders_PC/Terrain/FH_TerrainAlpha_VS.fx
++++ b/Data/Shaders_PC/Terrain/FH_TerrainAlpha_VS.fx
+@@ -34,7 +34,7 @@
+ 
+ 
+ //------------BOOL VERTEX SHADER INPUT CONSTANTS-----------
+-bool		bYFOG  : register(b0) : register(c19);	
++bool		bYFOG  : register(b0);	
+ //-------------VERTEX SHADER INPUT CONSTANTS----------------
+ 
+ 
+diff -ruN a/Data/Shaders_PC/Terrain/FH_TerrainCM_30_VS.fx b/Data/Shaders_PC/Terrain/FH_TerrainCM_30_VS.fx
+--- a/Data/Shaders_PC/Terrain/FH_TerrainCM_30_VS.fx
++++ b/Data/Shaders_PC/Terrain/FH_TerrainCM_30_VS.fx
+@@ -34,7 +34,7 @@
+ 
+ 
+ //------------BOOL VERTEX SHADER INPUT CONSTANTS-----------
+-bool		bYFOG  : register(b0) : register(c19);	
++bool		bYFOG  : register(b0);	
+ //-------------VERTEX SHADER INPUT CONSTANTS----------------
+ 
+ 
+diff -ruN a/Data/Shaders_PC/Terrain/FH_TerrainCM_VS.fx b/Data/Shaders_PC/Terrain/FH_TerrainCM_VS.fx
+--- a/Data/Shaders_PC/Terrain/FH_TerrainCM_VS.fx
++++ b/Data/Shaders_PC/Terrain/FH_TerrainCM_VS.fx
+@@ -34,7 +34,7 @@
+ 
+ 
+ //------------BOOL VERTEX SHADER INPUT CONSTANTS-----------
+-bool		bYFOG  : register(b0) : register(c19);	
++bool		bYFOG  : register(b0);	
+ //-------------VERTEX SHADER INPUT CONSTANTS----------------
+ 
+ // @@@ reutzky
+diff -ruN a/Data/Shaders_PC/Terrain/FH_TerrainLM_30_VS.fx b/Data/Shaders_PC/Terrain/FH_TerrainLM_30_VS.fx
+--- a/Data/Shaders_PC/Terrain/FH_TerrainLM_30_VS.fx
++++ b/Data/Shaders_PC/Terrain/FH_TerrainLM_30_VS.fx
+@@ -36,7 +36,7 @@
+ 
+ 
+ //------------BOOL VERTEX SHADER INPUT CONSTANTS-----------
+-bool		bYFOG  : register(b0) : register(c19);	
++bool		bYFOG  : register(b0);	
+ //-------------VERTEX SHADER INPUT CONSTANTS----------------
+ 
+ 
+diff -ruN a/Data/Shaders_PC/Terrain/FH_TerrainLM_SHD_30_VS.fx b/Data/Shaders_PC/Terrain/FH_TerrainLM_SHD_30_VS.fx
+--- a/Data/Shaders_PC/Terrain/FH_TerrainLM_SHD_30_VS.fx
++++ b/Data/Shaders_PC/Terrain/FH_TerrainLM_SHD_30_VS.fx
+@@ -35,7 +35,7 @@
+ 
+ 
+ //------------BOOL VERTEX SHADER INPUT CONSTANTS-----------
+-bool		bYFOG  : register(b0) : register(c19);	
++bool		bYFOG  : register(b0);	
+ //-------------VERTEX SHADER INPUT CONSTANTS----------------
+ 
+ 
+diff -ruN a/Data/Shaders_PC/Terrain/FH_TerrainLM_SHD_VS.fx b/Data/Shaders_PC/Terrain/FH_TerrainLM_SHD_VS.fx
+--- a/Data/Shaders_PC/Terrain/FH_TerrainLM_SHD_VS.fx
++++ b/Data/Shaders_PC/Terrain/FH_TerrainLM_SHD_VS.fx
+@@ -36,7 +36,7 @@
+ 
+ 
+ //------------BOOL VERTEX SHADER INPUT CONSTANTS-----------
+-bool		bYFOG  : register(b0) : register(c19);	
++bool		bYFOG  : register(b0);	
+ //-------------VERTEX SHADER INPUT CONSTANTS----------------
+ 
+ 
+diff -ruN a/Data/Shaders_PC/Terrain/FH_TerrainLM_VS.fx b/Data/Shaders_PC/Terrain/FH_TerrainLM_VS.fx
+--- a/Data/Shaders_PC/Terrain/FH_TerrainLM_VS.fx
++++ b/Data/Shaders_PC/Terrain/FH_TerrainLM_VS.fx
+@@ -36,7 +36,7 @@
+ 
+ 
+ //------------BOOL VERTEX SHADER INPUT CONSTANTS-----------
+-bool		bYFOG  : register(b0) : register(c19);	
++bool		bYFOG  : register(b0);	
+ //-------------VERTEX SHADER INPUT CONSTANTS----------------
+ 
+ 
+diff -ruN a/Data/Shaders_PC/Terrain/FH_TerrainLow_30_VS.fx b/Data/Shaders_PC/Terrain/FH_TerrainLow_30_VS.fx
+--- a/Data/Shaders_PC/Terrain/FH_TerrainLow_30_VS.fx
++++ b/Data/Shaders_PC/Terrain/FH_TerrainLow_30_VS.fx
+@@ -34,7 +34,7 @@
+ 
+ 
+ //------------BOOL VERTEX SHADER INPUT CONSTANTS-----------
+-bool		bYFOG  : register(b0) : register(c19);	
++bool		bYFOG  : register(b0);	
+ //-------------VERTEX SHADER INPUT CONSTANTS----------------
+ 
+ 
+diff -ruN a/Data/Shaders_PC/Terrain/FH_TerrainLow_VS.fx b/Data/Shaders_PC/Terrain/FH_TerrainLow_VS.fx
+--- a/Data/Shaders_PC/Terrain/FH_TerrainLow_VS.fx
++++ b/Data/Shaders_PC/Terrain/FH_TerrainLow_VS.fx
+@@ -34,7 +34,7 @@
+ 
+ 
+ //------------BOOL VERTEX SHADER INPUT CONSTANTS-----------
+-bool		bYFOG  : register(b0) : register(c19);	
++bool		bYFOG  : register(b0);	
+ //-------------VERTEX SHADER INPUT CONSTANTS----------------
+ 
+ 
+diff -ruN a/Data/Shaders_PC/Terrain/FH_TerrainSimpleLod_30_VS.fx b/Data/Shaders_PC/Terrain/FH_TerrainSimpleLod_30_VS.fx
+--- a/Data/Shaders_PC/Terrain/FH_TerrainSimpleLod_30_VS.fx
++++ b/Data/Shaders_PC/Terrain/FH_TerrainSimpleLod_30_VS.fx
+@@ -34,7 +34,7 @@
+ 
+ 
+ //------------BOOL VERTEX SHADER INPUT CONSTANTS-----------
+-bool		bYFOG  : register(b0) : register(c19);	
++bool		bYFOG  : register(b0);	
+ //-------------VERTEX SHADER INPUT CONSTANTS----------------
+ 
+ 
+diff -ruN a/Data/Shaders_PC/Terrain/FH_TerrainSimpleLod_VS.fx b/Data/Shaders_PC/Terrain/FH_TerrainSimpleLod_VS.fx
+--- a/Data/Shaders_PC/Terrain/FH_TerrainSimpleLod_VS.fx
++++ b/Data/Shaders_PC/Terrain/FH_TerrainSimpleLod_VS.fx
+@@ -34,7 +34,7 @@
+ 
+ 
+ //------------BOOL VERTEX SHADER INPUT CONSTANTS-----------
+-bool		bYFOG  : register(b0) : register(c19);	
++bool		bYFOG  : register(b0);	
+ //-------------VERTEX SHADER INPUT CONSTANTS----------------
+ 
+ 
+diff -ruN a/Data/Shaders_PC/Terrain/FH_TerrainSpec_30_VS.fx b/Data/Shaders_PC/Terrain/FH_TerrainSpec_30_VS.fx
+--- a/Data/Shaders_PC/Terrain/FH_TerrainSpec_30_VS.fx
++++ b/Data/Shaders_PC/Terrain/FH_TerrainSpec_30_VS.fx
+@@ -34,7 +34,7 @@
+ 
+ 
+ //------------BOOL VERTEX SHADER INPUT CONSTANTS-----------
+-bool		bYFOG  : register(b0) : register(c19);	
++bool		bYFOG  : register(b0);	
+ //-------------VERTEX SHADER INPUT CONSTANTS----------------
+ 
+ 
+diff -ruN a/Data/Shaders_PC/Terrain/FH_Terrain_VS_UTILS.fx b/Data/Shaders_PC/Terrain/FH_Terrain_VS_UTILS.fx
+--- a/Data/Shaders_PC/Terrain/FH_Terrain_VS_UTILS.fx
++++ b/Data/Shaders_PC/Terrain/FH_Terrain_VS_UTILS.fx
+@@ -34,7 +34,7 @@
+ 
+ 
+ //------------BOOL VERTEX SHADER INPUT CONSTANTS-----------
+-bool		bYFOG  : register(b0) : register(c19);	
++bool		bYFOG  : register(b0);	
+ //-------------VERTEX SHADER INPUT CONSTANTS----------------
+ 
+ 
+diff -ruN a/Data/Shaders_PC/Water/Waves_VS.fx b/Data/Shaders_PC/Water/Waves_VS.fx
+--- a/Data/Shaders_PC/Water/Waves_VS.fx
++++ b/Data/Shaders_PC/Water/Waves_VS.fx
+@@ -85,7 +85,10 @@
+ {
+     float3x4 WorldViewMat;
+     
+-    (float3x3)WorldViewMat = mul((float3x3)ViewMat, (float3x3)Instance[inst].WorldMat);
++    float3x3 _hawx_wvm3 = mul((float3x3)ViewMat, (float3x3)Instance[inst].WorldMat);
++    WorldViewMat[0] = float4(_hawx_wvm3[0], 0.0);
++    WorldViewMat[1] = float4(_hawx_wvm3[1], 0.0);
++    WorldViewMat[2] = float4(_hawx_wvm3[2], 0.0);
+     
+     float3 t = {Instance[inst].WorldMat[0][3] - ViewMat[0][3], Instance[inst].WorldMat[1][3] - ViewMat[1][3], Instance[inst].WorldMat[2][3] - ViewMat[2][3]};
+     
