@@ -21,7 +21,7 @@ PATCH_DIR="${HAWX_PATCH_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
 
 msg() { printf '[hawx] %s\n' "$1" | tee -a "$LOG"; }
 
-GAME_DIR="${HAWX_GAME_DIR:-/home/daniel/Games/Heroic/Prefixes/default/Tom Clancys H.A.W.X./drive_c/Program Files (x86)/DODI-Repacks/Tom Clancys H A W X}"
+GAME_DIR="${1:-${HAWX_GAME_DIR:-/home/daniel/Games/Heroic/Prefixes/default/Tom Clancys H.A.W.X./drive_c/Program Files (x86)/DODI-Repacks/Tom Clancys H A W X}}"
 
 msg "inicio"
 msg "prefixo: $GAME_DIR"
