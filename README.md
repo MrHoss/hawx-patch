@@ -215,10 +215,56 @@ Proton-CachyOS (vkd3d-shader **2.0**):
 - `1280x720` does exist as a mode under XWayland, so it is not a resolution
   problem.
 
+## Running it on another machine
+
+Nothing here is tied to a particular install. `apply.sh` finds the game in this
+order, and you can stop at whichever suits you:
+
+```sh
+./apply.sh --with-depthms                    # autodetect
+./apply.sh --with-depthms "/path/to/H A W X" # explicit path (game root)
+./apply.sh --with-depthms "/path/to/Shaders_PC"
+HAXW_GAME_DIR="/path/to/H A W X" ./apply.sh --with-depthms
+```
+
+If you would rather not pass anything, copy `apply.sh` and `patches/` **into the
+game folder** — it locates itself from there (`<game>/hawx-patch/apply.sh` also
+works, as does running it from `<game>/Data/Shaders_PC`). Autodetection searches
+`~/Games`, `~/Games/Heroic/Prefixes`, `~/GOG Games`, the Steam common folder,
+`/mnt`, `/media` and `/run/media/$USER`.
+
+`tools/fix_*.py` take the same treatment: `HAWX_GAME_DIR`, or a positional
+`dir_Shaders_PC`, and they fail loudly instead of doing nothing when the
+directory is missing.
+
+### Heroic pre-launch hook
+
+`heroic-hook.sh` re-applies the patch before every launch, which is what you want
+after a reinstall wipes the shaders. Point Heroic's per-game "before launch
+script" at it, then set `GAME_DIR` near the top to your game path.
+
+The hook deliberately does **not** rely on autodetection: with two installs
+present it would pick the alphabetically first one, patch that (already patched,
+so "fine"), and leave the real one broken without a word.
+
+Two bugs it had before, both silent:
+
+- its private copy of `fix_hdr.py` only matched `float bHDR`, but `fix_reg.py`
+  rewrites the declaration to `bool bHDR : register(b0)` first — so after a
+  reinstall `hdr` was skipped and the menu flickered again, with output sent to
+  `/dev/null`;
+- it looked for settings under `users/daniel/Documents`, but the prefix's user
+  is `steamuser`, so the resolution fix never applied either. It now derives the
+  prefix root from `GAME_DIR` and searches.
+
+Both are fixed by delegating to `apply.sh`, which verifies the result and exits
+non-zero if any fix did not stick.
+
 ## Repository layout
 
 ```
 apply.sh                                     entry point
+heroic-hook.sh                               re-apply before each Heroic launch
 patches/hawx-wined3d-shader-fix.patch        fixes #1+#2+#3 (49 files, semantics-preserving)
 patches/hawx-wined3d-depthms-workaround.patch  DepthMS stubs (4 files, opt-in)
 tools/fix_wvm.py                             generator: fix #1

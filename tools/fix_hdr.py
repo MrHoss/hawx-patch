@@ -9,8 +9,12 @@ Idempotente: aceita tanto a forma original (double binding) quanto a ja-corrigid
 """
 import os, re, sys
 
-ROOT_DEFAULT = ("/home/daniel/Games/Heroic/Prefixes/default/Tom Clancys H.A.W.X./"
-                "drive_c/Program Files (x86)/DODI-Repacks/Tom Clancys H A W X/Data/Shaders_PC")
+# Sem argumento, usa $HAWX_GAME_DIR ou a raiz do prefixo deste usuario.
+_env = os.environ.get("HAWX_GAME_DIR", "").rstrip("/")
+_default = _env + "/Data/Shaders_PC" if _env else (
+    os.path.expanduser("~/Games/Heroic/Prefixes/default/Tom Clancys H.A.W.X./"
+                        "drive_c/Program Files (x86)/DODI-Repacks/Tom Clancys H A W X/"
+                        "Data/Shaders_PC"))
 # uso: fix_X.py [--apply] [dir_Shaders_PC]
 _args = [a for a in sys.argv[1:] if not a.startswith("--")]
 ROOT = _args[0] if _args else ROOT_DEFAULT
@@ -25,6 +29,10 @@ DUP = re.compile(rb'^bool([ \t]+bHDR[ \t]*:[ \t]*)register\(b0\)[ \t]*:[ \t]*'
 # (aceita `bool` porque fix_reg.py ja pode ter removido o segundo binding;
 #  o tipo e' normalizado para `float`, que e' o que o engine de fato escreve)
 B0 = re.compile(rb'^(?:bool|float)([ \t]+bHDR[ \t]*:[ \t]*)register\(b0\)[ \t]*;', re.M)
+
+if not os.path.isdir(ROOT) or not os.listdir(ROOT):
+    sys.exit(f"Shaders_PC nao encontrado em: {ROOT}\n"
+             "informe o caminho: fix_X.py [--apply] <dir_Shaders_PC>")
 
 dry = '--apply' not in sys.argv
 total = 0
