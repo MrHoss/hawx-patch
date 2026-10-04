@@ -102,26 +102,37 @@ fog looks wrong, that is the line to change.
 
 ## Every part of this is load-bearing
 
-The fix was bisected on a real prefix, one group at a time, judging each round by
-launching the game from Heroic. Nothing here is speculative:
+Bisected **subtractively** on a real prefix, starting from the full patch and
+removing one group at a time. Each missing group produces its own distinct
+symptom, so nothing masks anything else:
 
-| applied | files | result |
+| full patch minus… | missing | symptom |
 |---|---|---|
-| nothing | 0 | never gets past the intro logos |
-| #1 only | 29 | never gets past the intro logos |
-| #1 + #2 | 49 | gets past the logos, then hangs on a black screen before the trailer |
-| #1 + #2 + DepthMS | 53\* | reaches the menu and plays; **menu elements flicker bright/dark** |
-| #1 + #2 + #3 + DepthMS | 53 | correct — menu and gameplay both clean |
+| — | nothing | correct: menu and gameplay both clean |
+| `wvm` | #1 | `E5017: Size change on the LHS` compile error |
+| `reg` | #2 | black rectangle in the gameplay view |
+| `depth` | DepthMS | hangs on a black screen before the trailer |
+| `hdr` | #3 | menu elements flicker bright/dark |
 
-\* same 53 paths as the full patch, but 6 of them without fix #3.
+There is no smaller set: **all 53 files are needed.**
 
-So: **#3 is what removes the menu flickering** — the opposite of the original
-guess that it *causes* it. And the DepthMS stub is what gets the game past the
-trailer. There is no smaller set of files that reaches "correct".
+An earlier *additive* pass was much less informative and is worth not repeating:
+`wvm` alone behaved exactly like the pristine tree, because the trailer hang is
+caused by the DepthMS shaders and masks everything upstream of it. Each group
+only becomes visible once the ones below it are present.
 
 Note that #2 and #3 overlap: in the 6 HUD shaders #3 rewrites the whole
 declaration, so it subsumes #2 there. That does not shrink the patch — the other
 14 files still need #2 on its own.
+
+`tools/variant.sh` mounts any subset for a bisect round:
+
+```sh
+./tools/variant.sh wvm+depth      # full minus reg and hdr
+./tools/variant.sh pristine        # untouched
+```
+
+It always rebuilds from a pristine copy, so rounds cannot contaminate each other.
 
 ## Usage
 
@@ -219,7 +230,8 @@ tools/manifest.sh                            sha256 of every .fx/.h, sorted by p
 tools/diffprefix.sh                          compare two shader trees
 tools/postinstall.sh                         one-shot setup for a fresh prefix
 tools/verifyrun.sh                           launch the game, report Proton + vkd3d errors
-tools/shaderab.sh                            swap in a reference shader tree, restore on exit
+tools/variant.sh                            mount any subset of fixes, for a bisect round
+tools/shaderab.sh                           swap in a reference shader tree, restore on exit
 tools/flicker.sh, tools/ymean.py             mean window brightness (Wayland/XWayland)
 ```
 
