@@ -9,8 +9,11 @@ Idempotente: aceita tanto a forma original (double binding) quanto a ja-corrigid
 """
 import os, re, sys
 
-ROOT = ("/home/daniel/Games/Heroic/Prefixes/default/Tom Clancys H.A.W.X./"
-        "drive_c/Program Files (x86)/DODI-Repacks/Tom Clancys H A W X/Data/Shaders_PC")
+ROOT_DEFAULT = ("/home/daniel/Games/Heroic/Prefixes/default/Tom Clancys H.A.W.X./"
+                "drive_c/Program Files (x86)/DODI-Repacks/Tom Clancys H A W X/Data/Shaders_PC")
+# uso: fix_X.py [--apply] [dir_Shaders_PC]
+_args = [a for a in sys.argv[1:] if not a.startswith("--")]
+ROOT = _args[0] if _args else ROOT_DEFAULT
 
 FILES = ['Hud/Tooltip_PS.fx', 'Hud/HudForeOnlyColor_PS.fx', 'Hud/HudFrame_PS.fx',
          'Hud/Menu_PS.fx', 'Hud/HudBackOnlyColor_PS.fx', 'Hud/OnlyColor_PS.fx']

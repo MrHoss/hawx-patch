@@ -3,8 +3,11 @@
 reservations' no vkd3d). Mantem a primeira, que e a que o fxc usa."""
 import glob, os, re, sys
 
-ROOT = ("/home/daniel/Games/Heroic/Prefixes/default/Tom Clancys H.A.W.X./"
-        "drive_c/Program Files (x86)/DODI-Repacks/Tom Clancys H A W X/Data/Shaders_PC")
+ROOT_DEFAULT = ("/home/daniel/Games/Heroic/Prefixes/default/Tom Clancys H.A.W.X./"
+                "drive_c/Program Files (x86)/DODI-Repacks/Tom Clancys H A W X/Data/Shaders_PC")
+# uso: fix_X.py [--apply] [dir_Shaders_PC]
+_args = [a for a in sys.argv[1:] if not a.startswith("--")]
+ROOT = _args[0] if _args else ROOT_DEFAULT
 
 # name : register(bN) : register(cM);   ->  name : register(bN);
 PAT = re.compile(

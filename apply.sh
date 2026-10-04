@@ -57,13 +57,13 @@ run() {
   local f="$1" dir
   dir="$(basename "$f")"
   if [ "$REVERT" = 1 ]; then
-    if patch -p1 -R --forward --batch --silent --reject-file=- < "$f" >/dev/null 2>&1; then
+    if patch -p1 -R --forward --batch --silent --no-backup-if-mismatch --reject-file=- < "$f" >/dev/null 2>&1; then
       echo "  revertido: $dir"
     else
       echo "  ja estava revertido: $dir"
     fi
   else
-    if patch -p1 --forward --batch --silent --reject-file=- < "$f" >/dev/null 2>&1; then
+    if patch -p1 --forward --batch --silent --no-backup-if-mismatch --reject-file=- < "$f" >/dev/null 2>&1; then
       echo "  aplicado: $dir"
     else
       echo "  ja estava aplicado: $dir"
@@ -74,6 +74,35 @@ run() {
 run "$MAIN"
 [ "$WITH_DEPTH" = 1 ] && run "$DEPTH"
 
+# --- verificacao: o patch realmente foi aplicado inteiro? -------------------
+# `patch --forward` reporta "ja estava aplicado" tambem quando o contexto nao
+# bate porque a arvore ja estava PARCIALmente corrigida. Sem esta checagem isso
+# passa silenciosamente e o jogo fica com metade do patch.
+echo
+falhas=0
+for p in "$MAIN" "$DEPTH"; do
+  [ "$WITH_DEPTH" = 1 ] || [ "$p" = "$MAIN" ] || continue
+  nome=$(basename "$p")
+  if [ "$REVERT" = 1 ]; then
+    # apos reverter, o que nao pode mais bater e o patch reverso
+    if patch -p1 --dry-run --batch --silent --reject-file=- < "$p" >/dev/null 2>&1; then
+      echo "  ok: $nome aplicado (reverte limpo)"
+    else
+      echo "  ATENCAO: $nome nao esta inteiramente aplicado"; falhas=$((falhas+1))
+    fi
+  else
+    if patch -p1 -R --dry-run --batch --silent --reject-file=- < "$p" >/dev/null 2>&1; then
+      echo "  ok: $nome aplicado (reverte limpo)"
+    else
+      echo "  ATENCAO: $nome NAO esta inteiramente aplicado."; falhas=$((falhas+1))
+      echo "           A arvore provavelmente ja estava parcialmente corrigida antes."
+      echo "           Use: rm -rf Data/Shaders_PC && cp -a Data/Shaders_PC.hawxbackup Data/Shaders_PC"
+    fi
+  fi
+done
+
+echo
 echo "Pronto. Backup intacto em: $BK"
 [ "$REVERT" = 1 ] && echo "Para desfazer de vez, apague os shaders e restaure do backup."
+[ "$falhas" -gt 0 ] && { echo "RESULTADO: patch INCOMPLETO ($falhas de 2)"; exit 1; }
 exit 0

@@ -100,13 +100,46 @@ Only binding #1 is removed there — a trace does not show `c19` being written, 
 it does not cover gameplay either, so there is no evidence to act on. If height
 fog looks wrong, that is the line to change.
 
+## Every part of this is load-bearing
+
+The fix was bisected on a real prefix, one group at a time, judging each round by
+launching the game from Heroic. Nothing here is speculative:
+
+| applied | files | result |
+|---|---|---|
+| nothing | 0 | never gets past the intro logos |
+| #1 only | 29 | never gets past the intro logos |
+| #1 + #2 | 49 | gets past the logos, then hangs on a black screen before the trailer |
+| #1 + #2 + DepthMS | 53\* | reaches the menu and plays; **menu elements flicker bright/dark** |
+| #1 + #2 + #3 + DepthMS | 53 | correct — menu and gameplay both clean |
+
+\* same 53 paths as the full patch, but 6 of them without fix #3.
+
+So: **#3 is what removes the menu flickering** — the opposite of the original
+guess that it *causes* it. And the DepthMS stub is what gets the game past the
+trailer. There is no smaller set of files that reaches "correct".
+
+Note that #2 and #3 overlap: in the 6 HUD shaders #3 rewrites the whole
+declaration, so it subsumes #2 there. That does not shrink the patch — the other
+14 files still need #2 on its own.
+
 ## Usage
 
 ```sh
 ./apply.sh                          # auto-detects the game under ~/Games
 ./apply.sh "/path/to/H A W X"       # explicit path
-./apply.sh --with-depthms           # also apply the optional workaround below
+./apply.sh --with-depthms           # also apply the DepthMS stub below
 ./apply.sh --revert                 # undo
+```
+
+After applying, `apply.sh` reverse-dry-runs both patches and **exits 1** if either
+is not fully applied. This matters: `patch --forward` reports "already applied"
+even when the context does not match because the tree was already *partially*
+fixed, which silently ships half a patch. On a partial tree, restore first:
+
+```sh
+cd "/path/to/Tom Clancys H A W X"
+rm -rf Data/Shaders_PC && cp -a Data/Shaders_PC.hawxbackup Data/Shaders_PC
 ```
 
 Equivalent by hand:
@@ -119,52 +152,89 @@ patch -p1 < patches/hawx-wined3d-shader-fix.patch
 A copy of the untouched `Data/Shaders_PC` is saved once to
 `Data/Shaders_PC.hawxbackup`. The script is idempotent — re-running it is a no-op.
 
-## Optional: `DepthMS*ToLinDepth_PS.fx`
+## `DepthMS*ToLinDepth_PS.fx`
 
 Kept as a **separate** patch (`--with-depthms`) because it is a behaviour change,
 not a compile fix.
 
-The originals use `Texture2DMS<float, N>`, which sends vkd3d's HLSL parser into
-an infinite loop in `hlsl_sm1_base_type`. The workaround replaces the four
-shaders with a stub returning a constant, which disables MSAA depth
-linearisation (soft particles / depth-based fades). Needed to get past the hang;
-kept opt-in so it is an explicit decision.
+The originals declare `Texture2DMS<float, N>`, which vkd3d-shader's HLSL parser
+cannot handle. The workaround replaces the four shaders with a stub returning a
+constant, which disables MSAA depth linearisation (soft particles / depth-based
+fades).
+
+Measured behaviour: without the stub the game clears the intro logos and then
+hangs on a black screen before the trailer; with it, it reaches the menu. Since
+this trades away soft particles, it stays opt-in rather than being folded into the
+main patch.
 
 ## Known remaining incompatibilities
 
-Found with `tools/scan.py`, not triggered at default settings:
+After the patch, 7 non-fatal errors remain (from `tools/scan.py`). None of them
+stop the game — it reaches the menu and plays:
 
-- `asm { vfetch ... }` — `Water/Water_VS.fx`, `Water/Waves_VS.fx`,
-  `Forest/forestgl*`, `Forest/ForestGLCVS.fx`, `Forest/ForestGLIVS.fx`,
-  `Statics/SmoothShadowMipMap_PS.fx`. vkd3d does not implement `asm`
-  (`E5030: Unknown modifier "asm"`). These back the vertex-fetch instancing path.
-- `Outline/Dilate_PS.fx` — `E5017: SM4 half4 maximum expression` /
-  `SM4 half dot expression`, `ps_4_0` only.
-- `Terrain/FH_Terrain*_VS.fx` — `E5016: Invalid packoffset() reservation:
-  Variables Instance and OneInstance overlap` (`OneInstance` and `Instance[16]`
-  both bound to `c32`), `vs_4_0` only. Compiles clean for `vs_3_0`.
+- `PostProcess/HDRDOFPPMissilePS.fx` — `E5015 space 115`. Declares
+  `sampler2D NoiseTexture : register(s8)` and `ScanLineTexture : register(s9)`,
+  colliding with `SceneAlphaMask : register(t8)` / `RainDistmask : register(t9)`
+  from `PostProcess/HDRCommon.h`. In SM4 a `sampler2D` occupies both a texture and
+  a sampler slot, so the two collide.
+- `Statics/SmoothShadow*_VS.fx` (4 files) — `E5013 INDEX`. They use
+  `SV_VertexID`, which only compiles for `vs_4_0` (+`dxbc-tpf`), but the engine
+  asks for `vs_3_0`. `TEXCOORD0`/`COLOR0` do compile for `vs_3_0`, but the
+  engine's vertex-declaration mapping for them is unknown, so rewriting it is a
+  guess that risks wrong geometry.
+- `Statics/SmoothShadowMipMap_PS.fx` — `E5030: Unknown modifier "asm"` plus
+  `E5000`. Uses `asm { tfetch2D ... }` for four point samples and a max. A HLSL
+  rewrite needs the texel size, which PS SM3 does not expose.
 
-DXVK is unaffected by all of this — it ships its own HLSL compiler (DXC), so this
-patch is only needed for the wined3d path.
+Each of these needs knowledge of the engine's actual binding (vertex semantics,
+texture/sampler allocation, texel size) to fix safely, so they are left alone
+rather than patched blind.
+
+## Runtime notes
+
+Measured on GE-Proton10-27 / Proton 10.0 (vkd3d-shader **1.18**) and
+Proton-CachyOS (vkd3d-shader **2.0**):
+
+- CachyOS's vkd3d 2.0 compiles all 638 shaders **without** this patch — and then
+  the game hangs on a black screen anyway. So the patch is not only a
+  compile-error workaround; something in it also fixes the hang.
+- Proton 10.0 launched **without** `PROTON_USE_WINED3D` still routes the game's
+  `D3DCompile` through Wine's `d3dcompiler_47` → vkd3d-shader, producing the same
+  errors. The patch is needed on that path too.
+- `1280x720` does exist as a mode under XWayland, so it is not a resolution
+  problem.
 
 ## Repository layout
 
 ```
 apply.sh                                     entry point
-patches/hawx-wined3d-shader-fix.patch        the 49-file fix (semantics-preserving)
-patches/hawx-wined3d-depthms-workaround.patch  optional, opt-in
+patches/hawx-wined3d-shader-fix.patch        fixes #1+#2+#3 (49 files, semantics-preserving)
+patches/hawx-wined3d-depthms-workaround.patch  DepthMS stubs (4 files, opt-in)
 tools/fix_wvm.py                             generator: fix #1
 tools/fix_reg.py                             generator: fix #2
 tools/fix_hdr.py                             generator: fix #3
 tools/scan.py                                scan every .fx, report vkd3d errors
 tools/verify.py                              compile specific shaders
+tools/manifest.sh                            sha256 of every .fx/.h, sorted by path
+tools/diffprefix.sh                          compare two shader trees
+tools/postinstall.sh                         one-shot setup for a fresh prefix
+tools/verifyrun.sh                           launch the game, report Proton + vkd3d errors
+tools/shaderab.sh                            swap in a reference shader tree, restore on exit
+tools/flicker.sh, tools/ymean.py             mean window brightness (Wayland/XWayland)
 ```
 
 `tools/*.py` are idempotent and are the source of truth for the patches; the
 `.patch` files are generated from them with `diff -ruN` against a pristine copy of
-`Data/Shaders_PC`.
+`Data/Shaders_PC`. The generators take an optional `dir_Shaders_PC` argument and
+default to dry-run; pass `--apply` to write.
+
+**Note on automatic bisecting:** `tools/bisect.sh` and the brightness-based
+verdict in `verifyrun.sh` are *not* trustworthy here. Launched from a plain shell
+rather than through Heroic, they classified a configuration that is known to work
+as "hung". Use them for logs, not for verdicts — judge shader changes by
+launching from Heroic.
 
 ## Credits
 
-Diagnosed against **vkd3d 1.19** `vkd3d-compiler` (Arch `vkd3d` package), which
-is the same HLSL front end Proton ships as `libvkd3d-shader-1.dll`.
+Diagnosed against vkd3d-shader **1.18** and **2.0** `vkd3d-compiler`, the same
+HLSL front end Proton ships as `libvkd3d-shader-1.dll`.

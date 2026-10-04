@@ -3,8 +3,11 @@
 por temporario float3x3 + atribuicao coluna a coluna. Preserva CRLF."""
 import glob, os, re, sys
 
-ROOT = ("/home/daniel/Games/Heroic/Prefixes/default/Tom Clancys H.A.W.X./"
-        "drive_c/Program Files (x86)/DODI-Repacks/Tom Clancys H A W X/Data/Shaders_PC")
+ROOT_DEFAULT = ("/home/daniel/Games/Heroic/Prefixes/default/Tom Clancys H.A.W.X./"
+                "drive_c/Program Files (x86)/DODI-Repacks/Tom Clancys H A W X/Data/Shaders_PC")
+# uso: fix_X.py [--apply] [dir_Shaders_PC]
+_args = [a for a in sys.argv[1:] if not a.startswith("--")]
+ROOT = _args[0] if _args else ROOT_DEFAULT
 
 PAT = re.compile(
     rb'^([ \t]*)\(float3x3\)([A-Za-z_]\w*)[ \t]*=[ \t]*(mul\([^;]*\));([ \t]*\r?)(?=\n)',
