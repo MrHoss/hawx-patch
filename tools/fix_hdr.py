@@ -21,8 +21,10 @@ FILES = ['Hud/Tooltip_PS.fx', 'Hud/HudForeOnlyColor_PS.fx', 'Hud/HudFrame_PS.fx'
 # bool  bHDR : register(b0) : register(c31);   ->  float bHDR : register(c31);
 DUP = re.compile(rb'^bool([ \t]+bHDR[ \t]*:[ \t]*)register\(b0\)[ \t]*:[ \t]*'
                  rb'register\(c31\)[ \t]*;', re.M)
-# float bHDR : register(b0);   ->  float bHDR : register(c31);
-B0 = re.compile(rb'^(float[ \t]+bHDR[ \t]*:[ \t]*)register\(b0\)[ \t]*;', re.M)
+# bool|float bHDR : register(b0);   ->  float bHDR : register(c31);
+# (aceita `bool` porque fix_reg.py ja pode ter removido o segundo binding;
+#  o tipo e' normalizado para `float`, que e' o que o engine de fato escreve)
+B0 = re.compile(rb'^(?:bool|float)([ \t]+bHDR[ \t]*:[ \t]*)register\(b0\)[ \t]*;', re.M)
 
 dry = '--apply' not in sys.argv
 total = 0
@@ -30,7 +32,7 @@ for rel in FILES:
     p = os.path.join(ROOT, rel)
     b = open(p, 'rb').read()
     nb, n = DUP.subn(rb'float\g<1>register(c31);', b)
-    nb, n2 = B0.subn(rb'\g<1>register(c31);', nb)
+    nb, n2 = B0.subn(rb'float\g<1>register(c31);', nb)
     n += n2
     if n:
         total += n
