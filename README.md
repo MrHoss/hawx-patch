@@ -244,5 +244,10 @@ a pristine copy of `Data/Shaders_PC`.
 
 ## Credits
 
-Diagnosed against vkd3d-shader `vkd3d-compiler`, the same HLSL front end Proton
-ships as `libvkd3d-shader-1.dll`.
+**Created by [Daniel (MrHoss) Souza](https://github.com/MrHoss)**
+
+Reverse engineering, HLSL shader fixes, patch generators, installation scripts, and testing on Linux with Wine/Proton.
+
+Diagnosed against the `vkd3d-compiler` from vkd3d-shader, the HLSL compiler shipped with Proton as `libvkd3d-shader-1.dll`.
+
+Special thanks to the Wine, Proton, and vkd3d projects for their open-source compatibility layers and shader compilation tools.
